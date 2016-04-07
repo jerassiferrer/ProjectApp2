@@ -12,6 +12,7 @@ tools:context="com.example.jera.projectapp.AddNoteActivity">
     android:layout_height="?attr/actionBarSize" />
 
 <LinearLayout
+    android:id="@+id/l"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="?attr/actionBarSize"
@@ -53,6 +54,29 @@ tools:context="com.example.jera.projectapp.AddNoteActivity">
             android:textColor="@android:color/primary_text_light" />
 
     </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Record"
+        android:id="@+id/button"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:id="@+id/button2"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="play"
+        android:id="@+id/button3"
+        />
+
 
 </LinearLayout>
 
