@@ -1,5 +1,8 @@
 package com.example.jera.projectapp;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,6 +22,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +32,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     FloatingActionButton fab;
-
+    private static final int RECORD_REQUEST_CODE = 101;
+    private static final int STORAGE_REQUEST_CODE = 102;
     NotesAdapter adapter;
     List<Note> notes = new ArrayList<>();
 
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d("Main", "onCreate");
+        requestPermission(Manifest.permission.RECORD_AUDIO,
+                RECORD_REQUEST_CODE);
+
 
         recyclerView = (RecyclerView) findViewById(R.id.main_list);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -67,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         } else {
+            Toast.makeText(this,
+                    "No notes added",
+                    Toast.LENGTH_LONG).show();
+
             //Snackbar.make(recyclerView, "No notes added.", Snackbar.LENGTH_SHORT).show();
 
         }
@@ -87,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 Intent i = new Intent(MainActivity.this, AddNoteActivity.class);
                 startActivity(i);
@@ -156,6 +169,56 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+//permission
+protected void requestPermission(String permissionType, int requestCode) {
+    int permission = ContextCompat.checkSelfPermission(this,
+            permissionType);
+
+    if (permission != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(this,
+                new String[]{permissionType}, requestCode
+        );
+    }
+}
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+                    //recordButton.setEnabled(false);
+
+                    Toast.makeText(this,
+                            "Record permission required",
+                            Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            case STORAGE_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    //recordButton.setEnabled(false);
+                    Toast.makeText(this,
+                            "External Storage permission required",
+                            Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+
+
+
 
 
     @Override

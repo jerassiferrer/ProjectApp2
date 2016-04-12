@@ -1,6 +1,10 @@
 package com.example.jera.projectapp;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -19,12 +23,13 @@ import java.util.List;
 public class AddNoteActivity extends AppCompatActivity {
     Toolbar toolbar;
     FloatingActionButton fab;
-
+    private static final int RECORD_REQUEST_CODE = 101;
+    private static final int STORAGE_REQUEST_CODE = 102;
     EditText etTitle, etDesc;
 
     String title, note;
     long time;
-
+    String timestring;
     boolean editingNote;
     Button play,stop,record;
     private MediaRecorder myAudioRecorder;
@@ -35,6 +40,12 @@ public class AddNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
+        //permission record
+
+        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                STORAGE_REQUEST_CODE);
+
+        timestring = Long.toString(time);
         //record
 
         play=(Button)findViewById(R.id.button3);
@@ -42,8 +53,8 @@ public class AddNoteActivity extends AppCompatActivity {
         record=(Button)findViewById(R.id.button);
 
         stop.setEnabled(false);
-        play.setEnabled(false);
-        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";;
+        //play.setEnabled(false);
+        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+title+timestring+"recording.3gp";
 
         myAudioRecorder=new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -71,6 +82,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
                 record.setEnabled(false);
                 stop.setEnabled(true);
+                play.setEnabled(false);
 
                 Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             }
@@ -121,7 +133,7 @@ public class AddNoteActivity extends AppCompatActivity {
         //Finish record------------------------------------------------------
         toolbar = (Toolbar) findViewById(R.id.addnote_toolbar);
         //setSupportActionBar(toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ic_clear_24dp);
+
         getSupportActionBar().setTitle("Add new note");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -197,4 +209,62 @@ public class AddNoteActivity extends AppCompatActivity {
 
 
     }
+// PERMISSION
+    protected void requestPermission(String permissionType, int requestCode) {
+        int permission = ContextCompat.checkSelfPermission(this,
+                permissionType);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permissionType}, requestCode
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+
+
+                    //recordButton.setEnabled(false);
+
+                    Toast.makeText(this,
+                            "Record permission required for audio buttons function",
+                            Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            case STORAGE_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+
+
+                    record.setEnabled(false);
+                    stop.setEnabled(false);
+                    play.setEnabled(false);
+                    Toast.makeText(this,
+                            "External Storage permission required for save audio note function function",
+                            Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+
+
+
+
+
+
 }

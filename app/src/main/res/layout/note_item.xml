@@ -10,8 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
+        android:background="#f4e9ae"
         android:orientation="vertical"
+
         android:padding="8dp">
 
         <TextView
@@ -19,6 +20,7 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             tools:text="Title" />
 
         <TextView

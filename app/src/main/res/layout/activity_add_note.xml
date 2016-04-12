@@ -9,7 +9,9 @@ tools:context="com.example.jera.projectapp.AddNoteActivity">
 <android.support.v7.widget.Toolbar
     android:id="@+id/addnote_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize" />
+    android:layout_height="?attr/actionBarSize"
+
+    />
 
 <LinearLayout
     android:id="@+id/l"
